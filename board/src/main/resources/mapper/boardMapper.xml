@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="board.board.mapper.BoardMapper">
+
+
+	<!-- 게시판 추가하기 -->
+	<insert id="create">
+		insert into board_table
+		(title,content,writer,password,regDate) values
+		(#{title},#{content},#{writer},#{password},#{regDate})
+
+	</insert>
+
+	<!-- 게시판 리스트보기 -->
+	<select id="listAll" resultType="com.board.board.BoardV0">
+		SELECT * FROM board_table
+		ORDER BY number DESC
+	</select>
+	
+	
+
+	<!-- 상세보기 -->
+	<select id="read" resultType="com.board.board.BoardV0">
+	
+		SELECT * FROM board_table WHERE number=#{number}
+		
+	</select>
+
+	<!-- 업데이트 -->
+	<update id="update">
+		UPDATE board_table
+		SET title=#{title}, content=#{content}, writer=#{writer}, regDate=#{regDate}, viewCnt=#{viewCnt}
+		WHERE number=#{number}
+
+	</update>
+	<!-- 삭제하기 -->
+	<delete id="delete">
+		DELETE FROM board_table
+		WHERE number=#{number}
+
+	</delete>
+
+	<!-- 리플 관련 -->
+	<select id="readLastReply" resultType="com.board.board.ReplyV0">
+		SELECT * FROM reply_table 
+		ORDER BY regDate DESC
+  		LIMIT 1
+
+		
+	</select>
+	
+	<insert id="createReply">
+		INSERT INTO reply_table
+		(boardNumber,parentNumber,content,writer,password,regDate)
+		VALUES(#{boardNumber},#{parentNumber},#{content},#{writer},#{password},#{regDate})
+	</insert>
+	
+	<select id="listAllReply" resultType="com.board.board.ReplyV0">
+		SELECT * FROM reply_table
+		ORDER BY regDate ASC
+	</select>
+	
+	<select id="readReplys" resultType="com.board.board.ReplyV0">
+		SELECT * FROM reply_table WHERE boardNumber=#{number}
+	</select>
+	
+	<select id="readSubReplys" resultType="com.board.board.ReplyV0">
+		SELECT * FROM reply_table WHERE boardNumber=#{boardNumber} AND parentNumber=#{parentNumber}
+	</select>
+	
+	<select id="readReply" resultType="com.board.board.ReplyV0">
+		SELECT * FROM reply_table WHERE replyNumber=#{number}
+	</select>
+	
+
+</mapper>
