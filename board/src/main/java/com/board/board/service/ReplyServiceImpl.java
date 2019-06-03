@@ -7,9 +7,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.board.board.ReplyV0;
 import com.board.board.ReplyWrapper;
+import com.board.board.dao.BoardDAO;
 import com.board.board.dao.ReplyDAO;
 
 @Service
@@ -17,11 +19,16 @@ public class ReplyServiceImpl implements ReplyService {
 
 	@Inject
 	private ReplyDAO replyDAO;
-
+	
+	@Inject
+	private BoardDAO boardDAO;
+	
+	@Transactional //댓글이 삭제, 추가가 동시에 이뤄질수있기 때문에 두 작업을 트랜잭션 처리, 동기화
 	@Override
 	public void createReply(ReplyV0 replyV0) throws Exception {
 		replyV0.setRegDate(new Date());
 		replyDAO.createReply(replyV0);
+		boardDAO.updateReplyCnt(replyV0.getBoardNumber(), 1);
 		// TODO Auto-generated method stub
 
 	}
@@ -49,20 +56,27 @@ public class ReplyServiceImpl implements ReplyService {
 			rs.add(rw);// 리스트에 추가
 		}
 		return rs;
-		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void updateReply(ReplyV0 replyV0) throws Exception {
+		replyDAO.updateReply(replyV0);
 
 	}
 
 	@Override
 	public ReplyV0 readReply(Integer number) throws Exception {
-		// TODO Auto-generated method stub
 		return replyDAO.readReply(number);
 	}
 
+	@Transactional
 	@Override
 	public void deleteReply(Integer number) throws Exception {
+		int boardNumber=replyDAO.getBoardNumber(number);//해당 게시판의 번호를 미리 받아놓음
 		replyDAO.deleteReply(number);
-		// TODO Auto-generated method stub
+		boardDAO.updateReplyCnt(boardNumber, -1);
+		
 
 	}
 

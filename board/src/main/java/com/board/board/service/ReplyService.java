@@ -12,4 +12,5 @@ public interface ReplyService {
 	//public List<ReplyV0> listAllReply() throws Exception;
 	public ReplyV0 lastReply() throws Exception;
 	public ReplyV0 readReply(Integer number) throws Exception;
+	public void updateReply(ReplyV0 replyV0) throws Exception;
 }

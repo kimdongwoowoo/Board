@@ -11,6 +11,14 @@ public class BoardV0 {
 	private String writer;
 	private String password;
 	private Date regDate;
+	private int replyCnt;
+	private int viewCnt;
+	public int getReplyCnt() {
+		return replyCnt;
+	}
+	public void setReplyCnt(int replyCnt) {
+		this.replyCnt = replyCnt;
+	}
 	public String getPassword() {
 		return password;
 	}
@@ -23,7 +31,7 @@ public class BoardV0 {
 	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
-	private int viewCnt;
+	
 	public String getWriter() {
 		return writer;
 	}

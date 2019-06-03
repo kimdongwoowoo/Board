@@ -12,4 +12,6 @@ public interface ReplyDAO {
 	List<ReplyV0> readSubReplys(Integer boardNumber,Integer parentNumber) throws Exception;
 	ReplyV0 lastReply() throws Exception;
 	ReplyV0 readReply(Integer number) throws Exception;
+	public void updateReply(ReplyV0 replyV0) throws Exception;
+	int getBoardNumber(Integer replyNumber) throws Exception;
 }

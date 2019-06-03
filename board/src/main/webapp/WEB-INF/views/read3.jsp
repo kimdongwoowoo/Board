@@ -42,9 +42,10 @@
                     </div>
                     <div class="box-footer">
                         <div class="user-block">
-                            <img class="img-circle img-bordered-sm" src="/dist/img/user1-128x128.jpg" alt="user image">
+                            <img class="img-circle img-bordered-sm" src="dist/img/humoseok.png" alt="user image">
                             <span class="username">
                                 <a href="#">${board.writer}</a>
+                                
                             </span>
                             <span class="description"><fmt:formatDate pattern="yyyy-MM-dd a HH:mm" value="${board.regDate}"/></span>
                         </div>
@@ -117,46 +118,7 @@
         		</div>
         	</div>
         	
-        	<!-- 댓글 수정,삭제 -->
-        	<div class='modal fade' id='modifyModal' role='dialog'>
-        		<div class='modal-dialog'>
-        			<div class='modal-content'>
-        				<div class='modal-header'>
-        					<button type='button' class='close' data-dismiss='modal'>&times;</button>
-        					<h4 class='modal-title'>댓글 수정창</h4>
-        				
-        				</div>
-        				<div class='modal-body'>
-        					<div class='form-group'>
-        						<label for='replyNo'>댓글 번호</label>
-        						<input class='form-control' id='replyNo' name='replyNo' readonly>
-        					</div>
-        					<div class='form-group'>
-        						<label for='replyText'>댓글 내용</label>
-        						<input class='form-control' id='replyText' name='replyText' readonly>
-        					</div>
-        					<div class='form-group'>
-        						<label for='replyWriter'>댓글 작성자</label>
-        						<input class='form-control' id='replyWriter' name='replyWriter' readonly>
-        					</div>
-        				</div>
-        				<div class='modal-footer'>
-	        				 <div class="pull-right">
-	                            <button type="button" class='btn btn-success modalModBtn'>수정</button>
-	                            <button type='button' class='btn btn-danger modalDelBtn'>삭제</button>
-	                        </div>
-	                        <div class="pull-right">
-	                        	<input type="password"  class="form-control pull-right" id="replyPassword" placeholder="비밀번호"> 	
-	                        </div>
-	        				
-        					<button type='button' class='btn btn-default pull-left' data-dismiss='modal'>닫기</button>
-        					
-        					
-        				</div>
-        			</div>
-        		</div>
-        	
-        	</div>
+       
         </section>
         
     </div>
@@ -232,7 +194,7 @@
     	    });
         });
         $(".listBtn").on("click", function () {
-           self.location = "/board/list"
+        	history.back();
         });
         
     });
@@ -249,29 +211,44 @@
 	var getRepliesURI='/board/readReplys?number='+boardNumber;
 	$(document).ready(function(){
 		
-		getReplies(getRepliesURI);
+		getReplies();
 	});
 
-	function getReplies(repliesURI){
-		$.getJSON(repliesURI, function(data){
+	function getReplies(){
+		$.getJSON(getRepliesURI, function(data){
 			var str='';
 			var list=data['replys'];
 			
+			
 			$(list).each(function(){
-				var reply=this.replyV0;
-				console.log(reply);
+				var reply=this.replyV0; //json으로 넘어온 댓글 리스트
 				var date=new Date(reply.regDate);
-				console.log(reply.boardNumber);
-				console.log(reply.replyNumber);
 				//<li data-replyNumber=''> 이부분 나중에 식별자로 쓰이게끔
-				str+="<li data-replyNumber='"+reply.replyNumber+"' class='replyLi'>"
+				str+="<li data-replyNumber='"+reply.replyNumber+"'class='replyLi'>"
 					+	"<p class='replyWriter'>"+reply.writer+"</p>"
 					+	"<p class='replyText'>"+reply.content+"</p>"
-					+	"<p class='replyRegDate'>"+date.getMonth()+"월"+date.getDate()+"일"+date.getHours()+"시"+date.getMinutes()+"분"+"</p>"
-					+	"<button type='button' class='btn btn-xs btn-success' data-toggle='modal' data-target='#modifyModal'>댓글 수정</button>"
+					+	"<p class='replyRegDate'>"+(date.getMonth()+1)+"월"+date.getDate()+"일"+date.getHours()+"시"+date.getMinutes()+"분"+"</p>"
+					+	"<p class='replyButtons'>"
+					+	"<button type='button' class='btn btn-xs btn-success modReplyBtn'>댓글 수정</button>&nbsp;"
+					+	"<button type='button' class='btn btn-xs btn-warning subReplyBtn'>답글 달기</button>"
+					+	"</p>"
+					+	"<ul class='subReplyUl'>";
+					
+					var subReplys=this.subReplys;
+					$(subReplys).each(function(){
+						var subDate=new Date(this.regDate);
+						str+="<li data-subReplyNumber='"+this.replyNumber+"' class='subReplyLi'>"
+							+	"<p>"+this.writer+"</p>"
+							+	"<p>"+this.content+"</p>"
+							+	"<p>"+(subDate.getMonth()+1)+"월"+subDate.getDate()+"일"+subDate.getHours()+"시"+subDate.getMinutes()+"분"+"</p>"
+							+	"<p>"
+							+	"<button type='button' class='btn btn-xs btn-success'>댓글 수정</button>"
+							+	"</p>"
+							+"</li>";
+					});
+					str+="</ul>"
 					+"</li>"
 					+"<hr/>";
-					
 				
 			});
 			$('#replies').html(str);			
@@ -312,88 +289,38 @@
 				$('#newReplyText').val('');
 				$('#newReplyWriter').val('');
 				$('#newReplyPassword').val('');
-				getReplies(getRepliesURI);
+				getReplies();
 				
 				
+			},
+			error : function(data){
+				alert('통신실패');
 			}
 		});
 		
 	});
-	//replies ul 안에 클래스명이 replyLi인 li 밑에 버튼이라는 뜻
-	$('#replies').on('click', '.replyLi button',function(){
-		var reply=$(this).parent(); //li를 찾아줌
-		
+	//밑에밑에밑에 타고들어가야함. replies이하는 다 append됐기 때문에 셀렉터를 일케찾아가야한다.
+	$('#replies').on('click', '>.replyLi >.replyButtons >.modReplyBtn',function(){
+		var reply=$(this).parent().parent(); //li를 찾아줌
 		var replyNumber=reply.attr('data-replyNumber'); //li안에 data-속성
-		var replyText=reply.find('.replyText').text();  //클래스명으로 엘리먼트 검색
-		var replyWriter=reply.find('.replyWriter').text();
+		window.open('reply_editor?replyNumber='+replyNumber,'댓글 에디터','width=400,height=500'); 
+		//굳이 컨트롤러 안거치고 가는 방법 알아볼것
 		
-		//modal 세팅
-		$('#replyNo').val(replyNumber);  //#replyNo는 modal안에 id임
-		$('#replyText').val(replyText); //#replyText는 겹치지만 modal에서는 id이고, 다른데선 class라 괜찮음
-		$('#replyWriter').val(replyWriter); //#replyNo는 modal안에 id임
-		
+	});
+	$('#replies').on('click', '>.replyLi >.replyButtons >.subReplyBtn',function(){
+		var reply=$(this).parent().parent(); //li를 찾아줌
+	
+		var replyNumber=reply.attr('data-replyNumber'); //li안에 data-속성
+		window.open('sub_reply?parentNumber='+replyNumber+'&boardNumber='+boardNumber,'대댓글 에디터','width=400,height=500'); 
+		//굳이 컨트롤러 안거치고 가는 방법 알아볼것
 		
 	});
 	
-	$('.modalDelBtn').on('click',function(){
-		debugger;
-		var password=$('#replyPassword').val();
-		var number = $('#replyNo').val();
-		var jsonData={
-				number:number,
-				password:password
-				
-		};
-		$.ajax({
-			type:'post',
-			url:'delete_reply', //여기서걍 비번체크 다하고 삭제까지 ㄱㄱ
-			data : jsonData,
-			success:function(data){
-				if(data==1)
-				{
-					alert('삭제완료');
-					$('#modifyModal').modal('hide');
-					getReplies(getRepliesURI);
-				}	
-				else
-				{
-					alert('댓글비번 틀림');
-					return;
-				}
-			}
-		});
-
+	$('#replies').on('click', '>.replyLi >.subReplyUl >.subReplyLi button',function(){
+		alert('클릭');
 	});
 	
-	$('.modalModBtn').on('click',function(){
-		debugger;
-		var password=$('#replyPassword').val();
-		var number = $('#replyNo').val();
-		var jsonData={
-				number:number,
-				password:password
-				
-		};
-		$.ajax({
-			type:'post',
-			url:'delete_reply', //여기서걍 비번체크 다하고 삭제까지 ㄱㄱ
-			data : jsonData,
-			success:function(data){
-				if(data==1)
-				{
-					alert('삭제완료');
-					$('#modifyModal').modal('hide');
-					getReplies(getRepliesURI);
-				}	
-				else
-				{
-					alert('댓글비번 틀림');
-					return;
-				}
-			}
-		});
-
-	});
+	
 	
 </script>
 </body>

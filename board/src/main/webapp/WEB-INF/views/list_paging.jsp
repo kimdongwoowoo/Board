@@ -69,6 +69,27 @@
 						</table>
 					</div>
 					<div class="box-footer">
+						<div class='text-center'>
+							<ul class='pagination'>
+								<c:if test="${pageMaker.prev}">
+								<!-- prev버튼이 있으면 startPage바로 이전페이지를 파라미터로 준 후 리로드 -->
+								 <li><a href="listPaging?page=${pageMaker.startPage-1}">이전</a></li> 
+								</c:if>
+									
+									 <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" step="1" var="x">
+									  <li <c:out value="${pageMaker.criteria.page == x ? 'class=active' : '' }"/>><a href="listPaging?page=${x}">
+										${x}</a></li>
+									 </c:forEach>
+										
+								
+								<c:if test="${pageMaker.next}">
+									<!-- next버튼도 prev와 마찬가지 -->
+									<li><a href="listPaging?page=${pageMaker.endPage+1}">다음</a></li>
+								</c:if>
+																
+							</ul>
+						</div>
+					
                         <div class="pull-right">
                             <button type="button" class="btn btn-success btn-flat" id="writeBtn">
                                 <i class="fa fa-pencil"></i> 글쓰기

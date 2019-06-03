@@ -43,10 +43,19 @@ public class ReplyDAOImpl implements ReplyDAO {
 
 	@Override
 	public void deleteReply(Integer number) throws Exception {
-		// TODO Auto-generated method stub
+		sqlSession.delete(namespace+".deleteReply", number);
 
 	}
-
+	@Override
+	public void updateReply(ReplyV0 replyV0) throws Exception {
+		sqlSession.update(namespace+".updateReply", replyV0);
+		
+	}
+	@Override
+	public int getBoardNumber(Integer replyNumber) throws Exception {
+		
+		return sqlSession.selectOne(namespace+".getBoardNumber", replyNumber);
+	}
 	@Override
 	public List<ReplyV0> readSubReplys(Integer boardNumber, Integer parentNumber) throws Exception {
 		// TODO Auto-generated method stub

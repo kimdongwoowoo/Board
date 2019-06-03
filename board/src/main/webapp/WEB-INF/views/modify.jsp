@@ -39,15 +39,15 @@
   		 	<div class='box-body'>
   		 		<div class="form-group">
                     <label for="title">제목</label>
-                    <input class="form-control" id="title" name="title" placeholder="최대 5자">
+                    <input class="form-control" id="title" name="title" placeholder="${board.title }">
                 </div>
   		 		<div class="form-group">
                     <label for="content">내용</label>
-                    <textarea class="form-control" id="content" rows="5" placeholder="최대 10자" style="resize: none;"></textarea>
+                    <textarea class="form-control" id="content" rows="5" placeholder="${board.content }" style="resize: none;"></textarea>
    	 			</div>
    	 			<div>
    	 				<label for="writer">작성자</label>
-                    <input class="form-control" id="writer" name="writer" placeholder="최대 5자">
+                    <input class="form-control" id="writer" name="writer" placeholder="${board.writer}">
    	 			</div>
 				<div>
 					<label for='password'>비밀번호</label>
@@ -78,28 +78,28 @@
 		$('#title').keyup(function(){
 			
             //alert($('#title').val().length);
-        	if($(this).val().length > 5)
+        	if($(this).val().length > 20)
         	{
-        		alert('최대 5자');
-        		$(this).val($(this).val().substring(0, 5 ));
+        		alert('최대 20자');
+        		$(this).val($(this).val().substring(0, 20 ));
         	}
 		});
 		$('#content').keyup(function(){
+			
+            //alert($('#title').val().length);
+        	if($(this).val().length > 50)
+        	{
+        		alert('최대 50자');
+        		$(this).val($(this).val().substring(0, 50 ));
+        	}
+		});
+		$('#writer').keyup(function(){
 			
             //alert($('#title').val().length);
         	if($(this).val().length > 10)
         	{
         		alert('최대 10자');
         		$(this).val($(this).val().substring(0, 10 ));
-        	}
-		});
-		$('#writer').keyup(function(){
-			
-            //alert($('#title').val().length);
-        	if($(this).val().length > 5)
-        	{
-        		alert('최대 5자');
-        		$(this).val($(this).val().substring(0, 5 ));
         	}
 		});
 		$('#toBack').click(function(){
@@ -130,7 +130,7 @@
 
 
 		$("#btnSave").click(function(){
-			if(!chkPwd( $.trim($('#password').val()))){ 
+			/*if(!chkPwd( $.trim($('#password').val()))){ 
 				 
 				 alert('비밀번호를 확인하세요.₩n(영문,숫자,특수기호를 혼합하여 8~20자 이내)');    
 
@@ -139,7 +139,7 @@
 				 $('#password').focus(); 
 				 return ;
 
-			}
+			}*/
 			var json = {
 					number : $("#number").val(),
 					title : $("#title").val(),
@@ -163,7 +163,7 @@
 					success : function(data) {
 						
 						alert("성공");
-						window.location.href = "/board/list";
+						window.location.href = "/board";
 						
 					},
 					error : function(error) {

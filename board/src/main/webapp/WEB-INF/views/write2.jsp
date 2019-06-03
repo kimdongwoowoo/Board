@@ -5,16 +5,16 @@
 <head>
 <%@ include file="header.jsp" %>
 <%@ include file="include/head.jsp"%>
-
+ <%@ include file="include/main_header.jsp"%>
+<%@ include file="include/left_column.jsp"%>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
- <%@ include file="include/main_header.jsp"%>
-<%@ include file="include/left_column.jsp"%>
+
 <div class="content-wrapper">
-	
+	 
  	<section class="content-header">
        <h1>
                 게시판
@@ -37,19 +37,19 @@
   		 	<div class='box-body'>
   		 		<div class="form-group">
                     <label for="title">제목</label>
-                    <input class="form-control" id="title" name="title" placeholder="최대 5자">
+                    <input class="form-control" id="title" name="title" placeholder="최대 20자">
                 </div>
   		 		<div class="form-group">
                     <label for="content">내용</label>
-                    <textarea class="form-control" id="content" rows="5" placeholder="최대 10자" style="resize: none;"></textarea>
+                    <textarea class="form-control" id="content" rows="5" placeholder="최대 50자" style="resize: none;"></textarea>
    	 			</div>
    	 			<div>
    	 				<label for="writer">작성자</label>
-                    <input class="form-control" id="writer" name="writer" placeholder="최대 5자">
+                    <input class="form-control" id="writer" name="writer" placeholder="최대 10자">
    	 			</div>
 				<div>
 					<label for='password'>비밀번호</label>
-					<input class="form-control" type="password" id="password" placeholder="영문,숫자,특수기호를 혼합하여 4~8자 이내">
+					<input class="form-control" type="password" id="password" placeholder="">
 				</div>
 			</div>
 			<!-- 발 -->
@@ -76,28 +76,29 @@
 		$('#title').keyup(function(){
 			
             //alert($('#title').val().length);
-        	if($(this).val().length > 5)
+        	if($(this).val().length > 20)
         	{
-        		alert('최대 5자');
-        		$(this).val($(this).val().substring(0, 5 ));
+        		alert('최대 20자');
+        		
+        		$(this).val($(this).val().substring(0, 20 ));
         	}
 		});
 		$('#content').keyup(function(){
+			
+            //alert($('#title').val().length);
+        	if($(this).val().length > 50)
+        	{
+        		alert('최대 50자');
+        		$(this).val($(this).val().substring(0, 50 ));
+        	}
+		});
+		$('#writer').keyup(function(){
 			
             //alert($('#title').val().length);
         	if($(this).val().length > 10)
         	{
         		alert('최대 10자');
         		$(this).val($(this).val().substring(0, 10 ));
-        	}
-		});
-		$('#writer').keyup(function(){
-			
-            //alert($('#title').val().length);
-        	if($(this).val().length > 5)
-        	{
-        		alert('최대 5자');
-        		$(this).val($(this).val().substring(0, 5 ));
         	}
 		});
 		$('#toList').click(function(){
@@ -128,7 +129,7 @@
 
 
 		$("#btnSave").click(function(){
-			if(!chkPwd( $.trim($('#password').val()))){ 
+			/*if(!chkPwd( $.trim($('#password').val()))){ 
 				 
 				 alert('비밀번호를 확인하세요.₩n(영문,숫자,특수기호를 혼합하여 8~20자 이내)');    
 
@@ -137,7 +138,7 @@
 				 $('#password').focus(); 
 				 return ;
 
-			}
+			}*/ //비밀번호 체크
 			var json = {
 					title : $("#title").val(),
 					writer : $("#writer").val(),
@@ -160,7 +161,7 @@
 					success : function(data) {
 					
 						alert("성공");
-						window.location.href = "/board/list";
+						window.location.href = "/board";
 						
 					},
 					error : function(error) {

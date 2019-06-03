@@ -26,6 +26,8 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 
 import com.board.board.BoardV0;
 import com.board.board.BoardWrapper;
+import com.board.board.Criteria;
+import com.board.board.PageMaker;
 import com.board.board.ReplyV0;
 import com.board.board.ReplyWrapper;
 import com.board.board.service.BoardService;
@@ -34,6 +36,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.*;
 @Controller
+
 public class BoardController {
 	public List<BoardV0> tmpList=new ArrayList<BoardV0>();
 
@@ -45,10 +48,21 @@ public class BoardController {
 	private ReplyService replyService;
 	
 	@RequestMapping(value="/")
-    public String welcome(){
-        return "redirect:list";
+    public String welcome(HttpServletRequest request) throws Exception{
+		logger.info(request.getRemoteAddr());
+		logger.info(request.getSession().getId());
+		return "redirect:/listPaging?page=1";
     }
-	
+	@RequestMapping(value="listPaging", method=RequestMethod.GET)
+	public String listPaging(Model model, Criteria criteria)throws Exception{
+		logger.info("listPaging");
+		PageMaker pageMaker=new PageMaker();
+		pageMaker.setCriteria(criteria);
+		pageMaker.setTotalCount(boardService.countBoard());
+		model.addAttribute("boards",boardService.listCriteria(criteria));//10개만 갖고옴
+		model.addAttribute("pageMaker",pageMaker); //얘를 통으로 넘겨서 jsp파일에서 세팅
+		return "list_paging";
+	}
 	
 	@RequestMapping(value= "list", method = RequestMethod.GET)
 	//@ResponseBody
@@ -91,12 +105,12 @@ public class BoardController {
 	
 	
 	//get방식으로 게시판 번호 받아서 게시판내용만 파라미터에 실어서 리턴, 댓글은 그 페이지로 가서 ajax로 받는다.
-	@RequestMapping(value="read2",method=RequestMethod.GET)
-	public String read2(@RequestParam("number") int number,Model model) throws Exception {
-		logger.info("read2...");
+	@RequestMapping(value="read3",method=RequestMethod.GET)
+	public String read3(@RequestParam("number") int number,Model model) throws Exception {
+		logger.info("read3...");
 		BoardV0 boardV0=boardService.read(number);
 		model.addAttribute("board",boardV0); 
-		return "read2";
+		return "read3";
 	}
 	
 	@RequestMapping(value="listTest", method=RequestMethod.GET)
@@ -159,7 +173,7 @@ public class BoardController {
 	public String delete(@RequestParam("number") int number) throws Exception{
 		logger.info("delete...");
 		boardService.delete(number);
-		return "redirect:list";
+		return "redirect:/";
 	}
 	
 	

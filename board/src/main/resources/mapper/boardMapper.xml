@@ -21,7 +21,24 @@
 		ORDER BY number DESC
 	</select>
 	
+	<!-- 페이징으로 리스트 갖고오기 -->
+	<select id="listCriteria" resultType="com.board.board.BoardV0">
+		SELECT * FROM board_table
+		ORDER BY number DESC
+		LIMIT #{perPageNum} OFFSET #{startNumber}
+	</select>
+	<select id="countBoard" resultType="int">
+		SELECT COUNT(number)
+		FROM board_table
+		WHERE number>0
+	</select>
 	
+	<!-- 댓글수 늘려주기 -->
+	<update id="updateReplyCnt">
+		UPDATE board_table
+		SET replyCnt=replyCnt+#{amount}
+		WHERE number=#{number}
+	</update>
 
 	<!-- 상세보기 -->
 	<select id="read" resultType="com.board.board.BoardV0">
@@ -53,6 +70,12 @@
 		
 	</select>
 	
+	<select id="getBoardNumber" resultType="int">
+		SELECT boardNumber FROM reply_table
+		WHERE replyNumber=#{replyNumber}
+	</select>
+	
+	
 	<insert id="createReply">
 		INSERT INTO reply_table
 		(boardNumber,parentNumber,content,writer,password,regDate)
@@ -76,5 +99,16 @@
 		SELECT * FROM reply_table WHERE replyNumber=#{number}
 	</select>
 	
+	<delete id="deleteReply">
+		DELETE FROM reply_table
+		WHERE replyNumber=#{number}
+
+	</delete>
+	<update id="updateReply">
+		UPDATE reply_table
+		SET content=#{content}
+		WHERE replyNumber=#{replyNumber}
+
+	</update>
 
 </mapper>
