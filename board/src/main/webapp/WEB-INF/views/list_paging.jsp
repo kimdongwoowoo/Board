@@ -53,7 +53,7 @@
 						<tr>
 							<td>${board.number}</td>
 							<td>
-								<a href="read3?number=${board.number}"> ${board.title}</a>
+								<a href="read3?number=${board.number}&page=${pageMaker.criteria.page }" }> ${board.title}</a>
 								<span class="badge bg-teal"><i class="fa fa-comment-o"></i> + ${board.replyCnt}</span>
 							
 							</td>

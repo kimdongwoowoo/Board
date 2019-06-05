@@ -5,16 +5,18 @@
 <head>
 <%@ include file="header.jsp" %>
 <%@ include file="include/head.jsp"%>
- <%@ include file="include/main_header.jsp"%>
-<%@ include file="include/left_column.jsp"%>
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
+<input type="hidden" id="number" value="${board.number}">
+<input type="hidden" id="viewCnt" value="${board.viewCnt}">
 <div class="wrapper">
-
+ <%@ include file="include/main_header.jsp"%>
+<%@ include file="include/left_column.jsp"%>
 <div class="content-wrapper">
-	 
+	
  	<section class="content-header">
        <h1>
                 게시판
@@ -31,31 +33,28 @@
   		<div class='box box-primary'>
   			<!-- 헤더 -->
 			<div class='box-header with-border'>
-   			 	<h3 class='box-title'>게시글 작성</h3> 
+   			 	<h3 class='box-title'>게시글 수정</h3> 
    			</div>
    			<!-- 바디 -->
   		 	<div class='box-body'>
   		 		<div class="form-group">
                     <label for="title">제목</label>
-                    <input class="form-control" id="title" name="title" placeholder="최대 20자">
+                    <input class="form-control" id="title" name="title" placeholder="${board.title }">
                 </div>
   		 		<div class="form-group">
                     <label for="content">내용</label>
-                    <textarea class="form-control" id="content" rows="5" placeholder="최대 50자" style="resize: none;"></textarea>
+                    <textarea class="form-control" id="content" rows="5" placeholder="${board.content }" style="resize: none;"></textarea>
    	 			</div>
    	 			<div>
    	 				<label for="writer">작성자</label>
-                    <input class="form-control" id="writer" name="writer" placeholder="최대 10자">
+                    <input class="form-control" id="writer" name="writer" value="${board.writer}" readonly>
    	 			</div>
-				<div>
-					<label for='password'>비밀번호</label>
-					<input class="form-control" type="password" id="password" placeholder="">
-				</div>
+				
 			</div>
 			<!-- 발 -->
 			<div class="box-footer">
 				<div class="pull-right">
-              		<button type="button" id='toList' class="btn btn-primary"><i class="fa fa-list"></i> 목록</button>
+              		<button type="button" id='toBack' class="btn btn-primary"><i class="fa fa-list"></i> 취소</button>
                   	<button type="submit" id='btnSave'class="btn btn-success"><i class="fa fa-save"></i> 저장</button>
                 </div>
              </div>
@@ -79,7 +78,6 @@
         	if($(this).val().length > 20)
         	{
         		alert('최대 20자');
-        		
         		$(this).val($(this).val().substring(0, 20 ));
         	}
 		});
@@ -101,9 +99,9 @@
         		$(this).val($(this).val().substring(0, 10 ));
         	}
 		});
-		$('#toList').click(function(){
+		$('#toBack').click(function(){
 			
-			window.location.href="/board";
+			window.history.back();
 		});
     
 		function chkPwd(str){
@@ -138,12 +136,11 @@
 				 $('#password').focus(); 
 				 return ;
 
-			}*/ //비밀번호 체크
+			}*/
 			var json = {
+					number : $("#number").val(),
 					title : $("#title").val(),
-					writer : $("#writer").val(),
 					content : $("#content").val(),
-					password : $("#password").val()
 			};
 			
 			for(var str in json){
@@ -155,11 +152,11 @@
 			}
 			 $.ajax({
 					type : "post",
-					url : "write",
+					url : "modify",
 					data : json,
 					dataType : "json",
 					success : function(data) {
-					
+						
 						alert("성공");
 						window.location.href = "/board";
 						
@@ -177,8 +174,7 @@
 
 
 		
-<input type="hidden" id="number" value="${board.number}">
-<input type="hidden" id="viewCnt" value="${board.viewCnt}">
+
 		
 </body>
 </html>

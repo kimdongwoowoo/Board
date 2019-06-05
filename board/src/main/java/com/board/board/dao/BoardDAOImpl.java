@@ -49,7 +49,6 @@ public class BoardDAOImpl implements BoardDAO {
 	public BoardV0 read(Integer number) throws Exception {
 		BoardV0 boardV0 = sqlSession.selectOne(namespace + ".read", number);
 		boardV0.setViewCnt(boardV0.getViewCnt() + 1);
-		System.out.println(boardV0.getViewCnt());
 		sqlSession.update(namespace + ".update", boardV0);
 		return boardV0;
 	}

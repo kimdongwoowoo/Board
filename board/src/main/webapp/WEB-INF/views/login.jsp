@@ -37,6 +37,11 @@
 				</button>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-xs-8">
+				<a href="register">회원가입</a>
+			</div>
+		</div>
 		
 	</div>
 </div>
@@ -56,18 +61,23 @@ $('#loginBtn').click(function(){
 	}
 	 $.ajax({
 			type : "post",
-			url : "login",
+			url : "loginPost",
 			data : json,
 			dataType : "json",
 			success : function(data) {
-				if(data==1) //로그인성공시
-				window.location.href="/board";
-				else if(data==2) //아이디 잘못됐을때
+				var code=data.code;
+				if(code==1) //로그인성공시
 				{
-					alert('회원정보를 확인하세요');
+					alert('하염^^');
+					
+					location.href=document.referrer;
+				}	
+				else if(code==2) //아이디 잘못됐을때
+				{
+					alert('아이디가 없습니다');
 					return;
 				}
-				else if(data==3)
+				else if(code==3)
 				{
 					alert('비밀번호 틀렸습니다');
 					return;

@@ -76,7 +76,7 @@
 				dataType : "json",
 				success : function(data) {
 					alert("가입 완료!");
-					window.location.href="/login";
+					window.location.href="/board/login";
 				},
 				error : function(error) {
 					alert("실패");

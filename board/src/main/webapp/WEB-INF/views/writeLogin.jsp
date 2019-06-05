@@ -45,7 +45,7 @@
    	 			</div>
    	 			<div>
    	 				<label for="writer">작성자</label>
-                    <input class="form-control" id="writer" name="writer" placeholder="최대 10자">
+                    <input class="form-control" id="writer" name="writer" value="${login.userId}" readonly>
    	 			</div>
 				<div>
 					<label for='password'>비밀번호</label>

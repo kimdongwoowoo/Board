@@ -10,8 +10,8 @@
 			userId,userPw,userName,userEmail) 
 			VALUES(	#{userId},#{userPw},#{userName},#{userEmail})
 	</insert>
-	<insert id="login">
+	<select id="login" resultType="com.board.board.UserV0">
 		SELECT * FROM user_table
 		WHERE userId=#{userId}
-	</insert>
+	</select>
 </mapper>

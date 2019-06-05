@@ -90,7 +90,7 @@
         	if($(this).val().length > 50)
         	{
         		alert('최대 50자');
-        		$(this).val($(this).val().substring(0, 50 ));
+        		$(this).val($(ths).val().substring(0, 50 ));
         	}
 		});
 		$('#writer').keyup(function(){

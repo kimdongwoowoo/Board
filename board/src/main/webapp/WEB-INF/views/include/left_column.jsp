@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
 <aside class="main-sidebar">
 
     <!-- sidebar: style can be found in sidebar.less -->
@@ -5,20 +8,36 @@
 
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
+      <!-- 로그인 아닐시-->
+      <c:if test="${empty login }">
         <div class="pull-left image">
-          <img src="dist/img/humoseok.png" class="img-circle" alt="User Image">
+          <img src="user/default-user.png" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+          <p>비회원</p>
           <!-- Status -->
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="#"><i class="fa fa-circle text-danger"></i> 오프라인</a>
         </div>
       </div>
-
+	  </c:if>
+	  <!-- 로그인시 -->
+	  <c:if test="${not empty login }">
+        <div class="pull-left image">
+          <img src="${login.userImg}" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>${login.userName }</p>
+          <!-- Status -->
+          <a href="#"><i class="fa fa-circle text-success"></i> 온라인</a>
+        </div>
+      </div>
+	  </c:if>
+	  
+	  
       <!-- search form (Optional) -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <input type="text" name="q" class="form-control" placeholder="검색">
           <span class="input-group-btn">
               <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
               </button>
@@ -29,12 +48,12 @@
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">HEADER</li>
+        <li class="header">헤더</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>링크</span></a></li>
+        <li><a href="#"><i class="fa fa-link"></i> <span>부가</span></a></li>
         <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+          <a href="#"><i class="fa fa-link"></i> <span>다단계</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>

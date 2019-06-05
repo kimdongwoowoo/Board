@@ -30,6 +30,7 @@ import com.board.board.Criteria;
 import com.board.board.PageMaker;
 import com.board.board.ReplyV0;
 import com.board.board.ReplyWrapper;
+import com.board.board.UserV0;
 import com.board.board.service.BoardService;
 import com.board.board.service.ReplyService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -49,8 +50,14 @@ public class BoardController {
 	
 	@RequestMapping(value="/")
     public String welcome(HttpServletRequest request) throws Exception{
-		logger.info(request.getRemoteAddr());
-		logger.info(request.getSession().getId());
+		logger.info("ip : "+ request.getRemoteAddr());
+		logger.info("session id : "+ request.getSession().getId());
+		UserV0 sessionValue=(UserV0)request.getSession().getAttribute("login");
+		if(sessionValue==null) 
+			logger.info("session login: null");
+		else
+			logger.info("session login: "+sessionValue.toString());
+		
 		return "redirect:/listPaging?page=1";
     }
 	@RequestMapping(value="listPaging", method=RequestMethod.GET)
@@ -81,13 +88,15 @@ public class BoardController {
 	
 	//�젣紐⑺겢由��떆 踰덊샇瑜� 諛쏆븘�꽌 寃뚯떆湲��젙蹂�+�뙎湲� 由ъ뒪�듃瑜� httpRequest濡� jsp濡� �꽆寃⑥쨲
 	@RequestMapping(value="read",method=RequestMethod.GET)
-	public String read(@RequestParam("number") int number,Model model) throws Exception {
+	public String read(@RequestParam("number") int number, Model model) throws Exception {
 		logger.info("read...");
 		BoardV0 boardV0=boardService.read(number);
 		List<ReplyWrapper> replys=replyService.readReplys(number);
 		
 		model.addAttribute("board",boardV0);
 		model.addAttribute("replys",replys);
+		
+		
 		return "read";
 	}
 	
@@ -106,11 +115,12 @@ public class BoardController {
 	
 	//get방식으로 게시판 번호 받아서 게시판내용만 파라미터에 실어서 리턴, 댓글은 그 페이지로 가서 ajax로 받는다.
 	@RequestMapping(value="read3",method=RequestMethod.GET)
-	public String read3(@RequestParam("number") int number,Model model) throws Exception {
+	public String read3(@RequestParam("number") int number,@RequestParam("page") int page,Model model) throws Exception {
 		logger.info("read3...");
 		BoardV0 boardV0=boardService.read(number);
 		model.addAttribute("board",boardV0); 
-		return "read3";
+		model.addAttribute("page",page);
+		return "readLogin";
 	}
 	
 	@RequestMapping(value="listTest", method=RequestMethod.GET)
@@ -119,10 +129,11 @@ public class BoardController {
 		return "listTest";
 	}
 	
+	
 	@RequestMapping(value="write", method=RequestMethod.GET)
 	public String writeGET() {
 		logger.info("write GET...");
-		return "write2"; //write.jsp
+		return "writeLogin"; //write.jsp
 	}
 	
 	
@@ -156,8 +167,9 @@ public class BoardController {
 		logger.info("modify GET...");
 		BoardV0 boardV0=boardService.read(number);
 		model.addAttribute("board",boardV0);
-		return "modify"; //modify.jsp
+		return "modifyLogin"; //modify.jsp
 	}
+	
 	//�닔�젙�맂 �궡�슜�씠 媛앹껜濡� �꽆�뼱�샂 (json->object)
 	//json�뿉�꽌 議고쉶�닔�뒗 0�쑝濡� �꽆�뼱�삤湲� �븣臾몄뿉 0�씠吏�留� �뼱李⑦뵾 DAO�뿉�꽌 update�븷�븣 �떎瑜몃�遺꾨쭔 �닔�젙�븯硫� �맂�떎.
 	@RequestMapping(value="modify", method=RequestMethod.POST)
